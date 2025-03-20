@@ -28,9 +28,15 @@
         function ToDB()
         {
             $db = new DB();
-            $quer = $db->connect('localhost', 'root', 'root', 'works');
+            $query = $db->connect('localhost', 'root', 'root', 'works');
 
-            $quer->query("INSERT INTO User (Login, Email, Password) VALUES ('$this->login', '$this->email', '$this->pass')");
+            $stmt = $quer->prepare("INSERT INTO User (Login, Email, Password) VALUES (:login, :email, :password)");
+
+            $stmt->execute([
+                ':login' => $this->login,
+                ':email' => $this->email,
+                ':password' => password_hash($this->pass, PASSWORD_DEFAULT) // Хешируем пароль
+            ]);
         }
        
     }
